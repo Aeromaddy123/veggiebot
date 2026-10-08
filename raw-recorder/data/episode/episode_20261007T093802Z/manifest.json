@@ -1,0 +1,33 @@
+{
+  "schema_version": 5,
+  "episode_id": "episode_20261007T093802Z",
+  "task": "pour the water into the bowl and put the bottle back",
+  "bags": {
+    "camera": "~/veggiebot_recordings/episode_20261007T093802Z/camera",
+    "aux": "~/veggiebot_recordings/episode_20261007T093802Z/aux"
+  },
+  "rtde_csv": "~/veggiebot_recordings/episode_20261007T093802Z/rtde.csv",
+  "start_wall_ns": 1791365883411103458,
+  "stop_wall_ns": 1791365961845171139,
+  "outcome": "success",
+  "metadata": {
+    "name": "Pour and dock (bowl fixed)",
+    "target_demos": 60,
+    "task": "pour the water into the bowl and put the bottle back",
+    "operator": "",
+    "object": "bottle and bowl",
+    "demo_name": "Demo 33"
+  },
+  "topics": {
+    "camera": [
+      "/veggiebot/camera/front",
+      "/veggiebot/camera/wrist",
+      "/veggiebot/camera/fronttop"
+    ],
+    "aux": [
+      "/veggiebot/gripper",
+      "/veggiebot/gripper/command",
+      "/veggiebot/episode"
+    ]
+  }
+}

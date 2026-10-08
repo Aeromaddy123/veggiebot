@@ -1,0 +1,185 @@
+{
+ "mode": "live",
+ "state": "DISARMED",
+ "owner": "NONE",
+ "ready": false,
+ "motion_enabled": true,
+ "checkpoint_approved": true,
+ "human_mode": null,
+ "human_link_age_ms": null,
+ "free_teleop": {
+  "available": true,
+  "active": false
+ },
+ "speed": {
+  "percent": 100,
+  "teleop_percent": 100,
+  "limit_rad_s": 0.06
+ },
+ "home": {
+  "configured": true,
+  "tolerance_rad": 0.02,
+  "distance_rad": null,
+  "at_home": false
+ },
+ "models": {
+  "selected": "smolvla",
+  "checkpoint_id": "",
+  "choices": [
+   {
+    "name": "smolvla",
+    "label": "SmolVLA"
+   },
+   {
+    "name": "pi05",
+    "label": "Pi0.5 (80k)"
+   },
+   {
+    "name": "pi05_35k",
+    "label": "Pi0.5 (35k)"
+   },
+   {
+    "name": "pi05_pour",
+    "label": "Pi0.5 Pour (80k)"
+   }
+  ]
+ },
+ "cameras": {
+  "front": {
+   "ok": false,
+   "age_ms": null,
+   "fps": 0.0,
+   "sequence": 0,
+   "error": "Camera not connected"
+  },
+  "fronttop": {
+   "ok": false,
+   "age_ms": null,
+   "fps": 0.0,
+   "sequence": 0,
+   "error": "Camera not connected"
+  },
+  "wrist": {
+   "ok": false,
+   "age_ms": null,
+   "fps": 0.0,
+   "sequence": 0,
+   "error": "Camera not connected"
+  }
+ },
+ "robot": {
+  "ok": false,
+  "safety_ok": false,
+  "error": "Demo copy: no robot connected"
+ },
+ "gripper": {
+  "ok": false,
+  "error": "Demo copy: no gripper connected"
+ },
+ "model": {
+  "ok": false,
+  "latency_ms": null,
+  "requests": 0,
+  "error": "Demo copy: no model loaded"
+ },
+ "camera_skew_ms": null,
+ "latest_camera_skew_ms": null,
+ "practice_good_replies": 0,
+ "practice_stable_replies_required": 20,
+ "pending_action_slots": 0,
+ "last_action": null,
+ "observed_action_min": null,
+ "observed_action_max": null,
+ "last_action_age_ms": null,
+ "faults": [],
+ "last_event": "Demo copy: not connected to cameras, robot or model",
+ "recording": {
+  "active": false,
+  "state": "IDLE",
+  "id": null,
+  "queued": 0,
+  "counts": {
+   "front": 0,
+   "fronttop": 0,
+   "wrist": 0,
+   "robot": 0,
+   "gripper": 0,
+   "policy": 0,
+   "event": 0
+  },
+  "problem": null
+ },
+ "watcher": {
+  "ok": false,
+  "checks": [
+   {
+    "name": "cameras",
+    "label": "Cameras",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "robot",
+    "label": "Robot link",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "safety",
+    "label": "Robot safety",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "gripper",
+    "label": "Gripper",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "control",
+    "label": "Robot control program",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "model",
+    "label": "Model service",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   },
+   {
+    "name": "disk",
+    "label": "Recording disk",
+    "ok": false,
+    "detail": "not connected (demo copy)"
+   }
+  ],
+  "needs_operator": [
+   "Check the robot is on and its cable is plugged in.",
+   "Press Open gripper to activate it."
+  ],
+  "auto_recover": true,
+  "recoveries": 0,
+  "gave_up": false,
+  "sequence": null,
+  "last_run": null,
+  "events": [
+   {
+    "time": "2026-10-08 16:38:09",
+    "kind": "start",
+    "message": "Watcher started"
+   },
+   {
+    "time": "2026-10-08 16:38:10",
+    "kind": "check",
+    "message": "Cameras: back to normal",
+    "data": {
+     "check": "cameras",
+     "ok": true
+    }
+   }
+  ],
+  "error": null
+ }
+}

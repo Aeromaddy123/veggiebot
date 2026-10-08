@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VeggieBot Recorder</title>
+  <link rel="stylesheet" href="/styles.css?v=11">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><h1>VeggieBot Recorder</h1><p>Jetson edge dataset recorder for real-world robot manipulation</p></div>
+      <nav class="gateway-nav" aria-label="Gateway sections"><a class="active" href="#live">Live view</a><a href="#preflightFolder">Operations</a><a href="#libraryFolder">Episodes</a><a href="#trashFolder">Storage</a></nav>
+      <div class="header-state"><span id="healthPill" class="pill">Checking</span><span id="progress">0 / 100 demos</span></div>
+    </header>
+
+    <section class="camera-grid" id="live">
+      <article class="card camera-card"><div class="card-title">Front camera</div><div class="camera"><img id="front" alt="Front live camera"><span id="frontRate" class="camera-rate">Waiting</span></div></article>
+      <article class="card camera-card"><div class="card-title">Wrist camera</div><div class="camera"><img id="wrist" alt="Wrist live camera"><span id="wristRate" class="camera-rate">Waiting</span></div></article>
+      <article class="card camera-card"><div class="card-title">Front top camera</div><div class="camera"><img id="fronttop" alt="Front top live camera"><span id="fronttopRate" class="camera-rate">Waiting</span></div></article>
+      <article class="card hid-card" id="hidPanel">
+        <div class="card-title">Human-in-the-loop correction</div>
+        <div class="hid-grid">
+          <label>Policy<select id="hidPolicy"><option value="ACT">ACT</option></select></label>
+          <div class="hid-state"><span id="hidLed" class="recording-led stopped"><i></i><span>Idle</span></span><small id="hidEpisode">No HID episode</small></div>
+          <button id="hidHome" class="secondary">Prepare HID at home</button>
+          <button id="hidStart" class="primary">Start policy + record</button>
+          <button id="hidTakeover" class="secondary" disabled>Teleop takeover</button>
+          <button id="hidResume" class="secondary" disabled>Resume ACT</button>
+          <button id="hidFinish" class="danger" disabled>Finish HID episode</button>
+        </div>
+        <small id="hidMessage">Select ACT, home the robot, then start recording.</small>
+      </article>
+    </section>
+
+    <section class="card recorder-bar">
+      <input id="task" aria-label="Task" placeholder="Describe the task">
+      <span id="recordingLed" class="recording-led stopped"><i></i><span>Stopped</span></span>
+      <button id="startButton" class="primary">Start</button>
+      <div id="activeControls" class="active-controls hidden"><span id="recordingTimer" class="recording-timer">REC 00:00</span><button id="markerButton" class="secondary">+ Add marker</button></div>
+    </section>
+    <div id="message" class="message"></div>
+
+    <section class="folders" id="folders">
+      <details class="folder" id="preflightFolder">
+        <summary><span><span class="folder-icon">□</span>Preflight <b id="preflightCount">0/8</b></span><span class="arrow">›</span></summary>
+        <div id="preflightBody" class="folder-body checks"></div>
+      </details>
+
+      <details class="folder">
+        <summary><span><span class="folder-icon">□</span>Session</span><span class="arrow">›</span></summary>
+        <div class="folder-body form-grid">
+          <label>Session name<input id="sessionName"></label>
+          <label>Target demos<input id="targetDemos" type="number" min="1" max="10000"></label>
+          <label>Operator<input id="operator"></label>
+          <label>Object<input id="objectName"></label>
+          <button id="saveSession" class="secondary form-action">Save session</button>
+        </div>
+      </details>
+
+      <details class="folder">
+        <summary><span><span class="folder-icon">□</span>Recording health</span><span class="arrow">›</span></summary>
+        <div id="healthMetrics" class="folder-body metric-strip"></div>
+      </details>
+
+      <details class="folder" id="libraryFolder" open>
+        <summary><span><span class="folder-icon">□</span>Episode library <b id="episodeCount">0</b></span><span class="arrow">›</span></summary>
+        <div class="folder-body library-tools">
+          <select id="episodeFilter"><option value="all">All episodes</option><option value="valid">Valid only</option><option value="invalid">Invalid only</option><option value="accepted">Accepted</option><option value="quarantine">Quarantine</option></select>
+          <button id="refreshEpisodes" class="icon-button" title="Refresh">↻</button>
+        </div>
+        <div id="episodes" class="episode-list"></div>
+      </details>
+
+      <details class="folder" id="trashFolder">
+        <summary><span><span class="folder-icon">□</span>Recycle bin <b id="trashCount">0</b></span><span class="arrow">›</span></summary>
+        <div id="trashBody" class="folder-body trash-list"></div>
+      </details>
+    </section>
+
+    <footer><span>RODeep transfer: <b title="Install a dedicated Jetson-to-RODeep SSH key before enabling uploads">Setup required</b></span><span id="diskFooter">Disk checking</span></footer>
+  </main>
+
+  <div id="markerDialog" class="overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog small-dialog"><button class="close" data-close="markerDialog">×</button><h2>Add event marker</h2>
+      <label>Event<select id="markerType"><option value="marker">General marker</option><option value="mistake">Mistake</option><option value="human_correction">Human correction</option><option value="retry">Retry</option><option value="grasp">Grasp</option><option value="task_complete">Task complete</option></select></label>
+      <label>Note<input id="markerNote" placeholder="Optional short note"></label>
+      <button id="saveMarker" class="primary">Save marker</button>
+    </section>
+  </div>
+
+  <div id="episodeDialog" class="overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog"><button class="close" data-close="episodeDialog">×</button><div id="episodeDetail"></div></section>
+  </div>
+  <script type="importmap">{"imports":{"three":"/three.module.js?v=1"}}</script>
+  <script src="/ur16e_replay.js?v=1"></script>
+<script type="module" src="/ur16e_cad.js?v=4"></script>
+  <script src="/app.js?v=14"></script>
+</body>
+</html>

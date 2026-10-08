@@ -1,0 +1,70 @@
+{
+ "episodes": [
+  {
+   "id": "20261002-123604-9647143f",
+   "name": "Demo 35",
+   "started_wall": "2026-10-02T12:36:04+0200",
+   "duration_s": 34.4,
+   "status": "COMPLETE",
+   "problem": null,
+   "counts": {
+    "front": 1032,
+    "fronttop": 1032,
+    "wrist": 1113,
+    "robot": 1703,
+    "gripper": 686,
+    "policy": 163,
+    "event": 1647
+   },
+   "size_bytes": 181031867,
+   "integrity_valid": null,
+   "reviewed": false,
+   "exported": false,
+   "labels": {
+    "auto_outcome": {
+     "verdict": "likely grasp (fingers stopped on something)",
+     "gripper_position": 116
+    },
+    "outcome": "success",
+    "updated_wall": "2026-10-08T11:02:31+0200"
+   }
+  },
+  {
+   "id": "20261002-122750-a67112b2",
+   "name": "Demo 30",
+   "started_wall": "2026-10-02T12:27:50+0200",
+   "duration_s": 42.0,
+   "status": "COMPLETE",
+   "problem": null,
+   "counts": {
+    "front": 1259,
+    "fronttop": 1259,
+    "wrist": 1358,
+    "robot": 2079,
+    "gripper": 836,
+    "policy": 181,
+    "event": 1628
+   },
+   "size_bytes": 216076675,
+   "integrity_valid": null,
+   "reviewed": false,
+   "exported": false,
+   "labels": {
+    "auto_outcome": {
+     "verdict": "likely grasp (fingers stopped on something)",
+     "gripper_position": 115
+    }
+   }
+  }
+ ],
+ "trash": [],
+ "disk": {
+  "total_bytes": 59530027008,
+  "free_bytes": 11351764992,
+  "recordings_bytes": 6101158391,
+  "trash_bytes": 202464415
+ },
+ "delete_password_set": false,
+ "trash_retention_days": 5,
+ "recording_id": null
+}

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>VeggieBot · Operate</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="brand">VeggieBot<small>SmolVLA inference gateway</small></span>
+      <span id="stateBadge" class="state-badge" role="status" aria-live="polite">
+        <span class="light" aria-hidden="true"></span><span id="stateText">Checking</span>
+      </span>
+      <span id="ownerBadge" class="owner-badge" hidden>Driver <strong id="ownerText">Model</strong></span>
+      <span id="recBadge" class="rec-badge" hidden><span class="dot" aria-hidden="true"></span>Recording <span id="recTimer">0:00</span></span>
+    </div>
+    <div class="topbar-right">
+      <a href="/review.html" class="button button-secondary button-small">Review recordings</a>
+      <button id="stopButton" class="button button-stop button-big" disabled>Stop</button>
+    </div>
+  </header>
+
+  <div id="connectionBanner" class="banner banner-bad" hidden role="alert">
+    Connection lost. The status shown may be old — do not trust it to start or judge a movement run.
+  </div>
+  <div id="simBanner" class="banner banner-info" hidden>
+    <strong>Simulation only.</strong> This screen is using pretend sensors. It cannot move the robot.
+  </div>
+
+  <p id="uiError" class="ui-error" role="alert" aria-live="assertive"></p>
+
+  <main class="layout">
+    <section class="camera-stage" aria-label="Live cameras">
+      <figure class="camera-tile camera-front" data-camera="front">
+        <img id="camFront" alt="Front camera view" hidden>
+        <div id="camFrontOverlay" class="camera-overlay">
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="camFrontMessage">Waiting for picture…</p>
+          <button class="button button-secondary button-small reconnect-btn" data-camera="front">Reconnect now</button>
+        </div>
+        <figcaption><span class="cam-name">Front</span><span id="camFrontStatus" class="cam-status">—</span></figcaption>
+      </figure>
+      <figure class="camera-tile camera-top" data-camera="fronttop">
+        <img id="camFronttop" alt="Front-top camera view" hidden>
+        <div id="camFronttopOverlay" class="camera-overlay">
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="camFronttopMessage">Waiting for picture…</p>
+          <button class="button button-secondary button-small reconnect-btn" data-camera="fronttop">Reconnect now</button>
+        </div>
+        <figcaption><span class="cam-name">Top</span><span id="camFronttopStatus" class="cam-status">—</span></figcaption>
+      </figure>
+      <figure class="camera-tile camera-wrist" data-camera="wrist">
+        <img id="camWrist" alt="Wrist camera view" hidden>
+        <div id="camWristOverlay" class="camera-overlay">
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="camWristMessage">Waiting for picture…</p>
+          <button class="button button-secondary button-small reconnect-btn" data-camera="wrist">Reconnect now</button>
+        </div>
+        <figcaption><span class="cam-name">Wrist</span><span id="camWristStatus" class="cam-status">—</span></figcaption>
+      </figure>
+    </section>
+
+    <aside class="side-panel" aria-label="Guided checklist and controls">
+      <div id="testPanel" class="panel panel-first">
+        <h3>Test</h3>
+        <div id="modelRow" class="model-row" hidden>
+          <label for="modelSelect" class="small">Model</label>
+          <select id="modelSelect" aria-label="Model"></select>
+          <span id="modelHint" class="muted small"></span>
+        </div>
+        <button id="testStart" class="button button-primary button-full button-big">Start test</button>
+        <p class="muted small">Opens the gripper, goes Home, checks the model, records, then lets the model drive.</p>
+        <button id="testReset" class="button button-secondary button-full">Reset: stop, open gripper, go Home</button>
+        <p id="sequenceText" class="sequence-text small" role="status" aria-live="polite"></p>
+        <label class="dial-row" for="speedDial">Inference speed <strong id="speedValue">—</strong></label>
+        <input id="speedDial" class="dial" type="range" min="10" max="100" step="5" value="100">
+        <p id="speedDetail" class="muted small"></p>
+        <label class="dial-row" for="teleopDial">Teleop speed <strong id="teleopValue">—</strong></label>
+        <input id="teleopDial" class="dial" type="range" min="10" max="100" step="5" value="100">
+        <p id="teleopDetail" class="muted small"></p>
+        <div class="controls">
+          <button id="gripperOpen" class="button button-secondary button-small">Open gripper</button>
+          <button id="faultReset" class="button button-secondary button-small" hidden>Clear fault</button>
+        </div>
+      </div>
+
+      <div id="watcherPanel" class="panel">
+        <h3>Watcher <span id="watcherBadge" class="watcher-badge">—</span></h3>
+        <ul id="watcherNeeds" class="needs-list"></ul>
+        <ul id="watcherChecks" class="check-list"></ul>
+        <p id="lastRun" class="muted small"></p>
+        <details id="blackboxDetails">
+          <summary>Black box (recent events)</summary>
+          <ol id="blackbox" class="blackbox"></ol>
+        </details>
+      </div>
+
+      <h2>Step by step</h2>
+      <ol id="checklist" class="checklist"></ol>
+
+      <div id="primaryActionWrap" class="panel">
+        <button id="primaryAction" class="button button-primary button-full button-big" hidden></button>
+        <p id="primaryActionReason" class="reason muted"></p>
+      </div>
+
+      <div id="runningPanel" class="panel" hidden>
+        <h3>Correct the model</h3>
+        <div class="controls owner-controls">
+          <button id="takeoverButton" class="button button-secondary">Human takeover</button>
+          <button id="pauseButton" class="button button-secondary">Pause and hold</button>
+          <button id="returnButton" class="button button-secondary">Return to model</button>
+        </div>
+      </div>
+
+      <div id="recordingPanel" class="panel">
+        <h3>Recording</h3>
+        <div class="controls">
+          <button id="recordStart" class="button button-secondary" disabled>Start recording</button>
+          <button id="recordStop" class="button button-secondary" disabled>Finish recording</button>
+        </div>
+        <p id="recordCounts" class="muted small">No active episode</p>
+      </div>
+    </aside>
+  </main>
+
+  <section class="health-strip" aria-label="System health details">
+    <button id="chipCameras" class="health-chip">Cameras <span id="chipCamerasValue">—</span></button>
+    <button id="chipRobot" class="health-chip">Robot <span id="chipRobotValue">—</span></button>
+    <button id="chipGripper" class="health-chip">Gripper <span id="chipGripperValue">—</span></button>
+    <button id="chipModel" class="health-chip">Model <span id="chipModelValue">—</span></button>
+    <span class="health-spacer"></span>
+    <span id="updatedAt" class="muted small">—</span>
+  </section>
+
+  <details id="advanced" class="advanced">
+    <summary>Diagnostic details</summary>
+    <pre id="detailText">Waiting for data.</pre>
+  </details>
+
+  <dialog id="practiceDialog" aria-labelledby="practiceConfirmTitle">
+    <form method="dialog" class="dialog-content">
+      <h2 id="practiceConfirmTitle">Switch to inference mode</h2>
+      <p>Stop standalone teleop and the standalone raw recorder first. This gateway's own recorder may stay on. Practice will not move the arm.</p>
+      <label class="check-row"><input id="modeCheck" type="checkbox"><span>Standalone teleop and raw recorder are stopped. No other program will control the robot.</span></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="button button-secondary">Go back</button>
+        <button id="confirmPractice" value="default" class="button button-primary" disabled>Start Practice</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="homeDialog" aria-labelledby="homeConfirmTitle">
+    <form method="dialog" class="dialog-content">
+      <h2 id="homeConfirmTitle">Move to the saved Home pose</h2>
+      <p>The gripper opens first (anything it holds will drop), then the arm moves on its own, directly to the saved Home pose, at the speed set on the dial. Make sure the workspace is clear.</p>
+      <label class="check-row"><input id="homeCheck" type="checkbox"><span>The workspace is clear and I am ready to press Stop if needed.</span></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="button button-secondary">Go back</button>
+        <button id="confirmHome" value="default" class="button button-primary" disabled>Move to Home</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="seqDialog" aria-labelledby="seqTitle">
+    <form method="dialog" class="dialog-content">
+      <h2 id="seqTitle">Start test</h2>
+      <p id="seqText"></p>
+      <label class="check-row"><input id="seqCheck" type="checkbox"><span>The area is clear and my hand is on the emergency stop.</span></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="button button-secondary">Go back</button>
+        <button id="confirmSeq" value="default" class="button button-primary" disabled>Go</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="runDialog" aria-labelledby="confirmTitle">
+    <form method="dialog" class="dialog-content">
+      <h2 id="confirmTitle">Check the robot first</h2>
+      <p>Stand by the robot. Make sure the area is clear and the arm is at the starting position you chose for this test. The gateway will not move it to a saved home for you.</p>
+      <label class="check-row"><input id="confirmCheck" type="checkbox"><span>I checked the robot and the area.</span></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="button button-secondary">Go back</button>
+        <button id="confirmRun" value="default" class="button button-primary" disabled>Allow movement</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

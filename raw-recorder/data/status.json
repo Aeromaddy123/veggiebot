@@ -1,0 +1,109 @@
+{
+ "recorder_state": "idle",
+ "episode_path": "",
+ "elapsed_s": 0.0,
+ "last_error": "",
+ "markers": [],
+ "log_tail": [
+  "Demo copy: not connected to cameras, robot or model"
+ ],
+ "ok": true,
+ "health": {
+  "ready": false,
+  "checks": [
+   {
+    "name": "Edge stack",
+    "ok": false,
+    "value": "Demo copy: not running",
+    "required": true
+   },
+   {
+    "name": "Front camera",
+    "ok": false,
+    "value": "Camera not connected",
+    "required": true
+   },
+   {
+    "name": "Wrist camera",
+    "ok": false,
+    "value": "Camera not connected",
+    "required": true
+   },
+   {
+    "name": "Front top camera",
+    "ok": false,
+    "value": "Camera not connected",
+    "required": true
+   },
+   {
+    "name": "RTDE",
+    "ok": false,
+    "value": "Robot not connected",
+    "required": true
+   },
+   {
+    "name": "RTDE continuity",
+    "ok": false,
+    "value": "Robot not connected",
+    "required": true
+   },
+   {
+    "name": "Single RTDE reader",
+    "ok": false,
+    "value": "0 sockets",
+    "required": true
+   },
+   {
+    "name": "Gripper",
+    "ok": false,
+    "value": "Gripper not connected",
+    "required": true
+   },
+   {
+    "name": "Teleop gripper intent",
+    "ok": false,
+    "value": "Teleop not connected",
+    "required": true
+   },
+   {
+    "name": "Robot safety feedback",
+    "ok": false,
+    "value": "Robot not connected",
+    "required": true
+   },
+   {
+    "name": "Robot control channel",
+    "ok": false,
+    "value": "unavailable",
+    "required": true
+   },
+   {
+    "name": "Storage",
+    "ok": true,
+    "value": "Demo copy",
+    "required": false
+   }
+  ],
+  "metrics": {
+   "front_hz": 0.0,
+   "wrist_hz": 0.0,
+   "fronttop_hz": 0.0,
+   "rtde_hz": 0.0,
+   "gripper_hz": 0.0,
+   "rtde_max_gap_ms": 0.0,
+   "live_skew_ms": 0.0,
+   "disk_free_gb": 0.0
+  }
+ },
+ "session": {
+  "name": "Pour and dock (bowl fixed)",
+  "target_demos": 60,
+  "task": "pour the water into the bowl and put the bottle back",
+  "operator": "",
+  "object": "bottle and bowl"
+ },
+ "progress": {
+  "accepted": 0,
+  "target": 60
+ }
+}

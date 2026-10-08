@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeggieBot</title>
+<meta name="description" content="VeggieBot: teaching a UR16e robot arm kitchen tasks from human demonstrations, with vision-language-action models.">
+<style>
+  :root { --bg:#F8F4EC; --card:#FFFFFF; --ink:#1B2127; --muted:#5B636B; --line:#E4DED2; --accent:#3B7A1E; --accent-ink:#FFFFFF; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0F1216; --card:#171C21; --ink:#ECEFF1; --muted:#9AA3AB; --line:#2A3138; --accent:#9BD35A; --accent-ink:#0F1216; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 Verdana, Geneva, sans-serif; }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 16px; }
+  header { padding:56px 0 32px; }
+  .kicker { color:var(--accent); font-weight:bold; letter-spacing:.08em; text-transform:uppercase; font-size:13px; margin:0 0 10px; }
+  h1 { font-size:clamp(30px, 6vw, 48px); line-height:1.1; margin:0 0 16px; }
+  h2 { font-size:24px; margin:0 0 14px; }
+  h3 { font-size:17px; margin:0 0 6px; }
+  p { margin:0 0 12px; }
+  .lead { font-size:18px; color:var(--muted); max-width:720px; }
+  .buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:22px; }
+  .btn { display:inline-block; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:bold; border:2px solid var(--accent); }
+  .btn.primary { background:var(--accent); color:var(--accent-ink); }
+  .btn.secondary { color:var(--accent); }
+  section { padding:36px 0; border-top:1px solid var(--line); }
+  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; }
+  .card p, .muted { color:var(--muted); }
+  .step { font-size:13px; color:var(--accent); font-weight:bold; }
+  figure { margin:0; }
+  figure img, figure video { width:100%; display:block; border-radius:8px; border:1px solid var(--line); background:#000; }
+  figcaption { font-size:13px; color:var(--muted); margin-top:6px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  .scroll { overflow-x:auto; }
+  .two { display:grid; gap:24px; grid-template-columns:1fr; }
+  @media (min-width: 820px) { .two { grid-template-columns:1.1fr 1fr; align-items:start; } }
+  a { color:var(--accent); }
+  footer { padding:28px 0 48px; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Robot learning from demonstration</p>
+    <h1>VeggieBot</h1>
+    <p class="lead">A UR16e robot arm that learns kitchen tasks by watching a person do them. We drive the arm with a VR controller, record every move with three cameras, and train vision-language-action models to repeat the task on their own.</p>
+    <div class="buttons">
+      <a class="btn primary" href="raw-recorder/">Open the raw recorder</a>
+      <a class="btn primary" href="inference-gateway/">Open the inference gateway</a>
+      <a class="btn secondary" href="https://github.com/Aeromaddy123/veggiebot">Code and documentation</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="two">
+      <div>
+        <h2>The current task</h2>
+        <p>Pick up a water bottle anywhere on the table, pour into a bowl at a fixed spot, and put the bottle back in its dock. It is the first step of a simple recipe (lemon water).</p>
+        <p class="muted">Before pouring, the same setup learned to pick up a block placed anywhere on a 5&times;5 grid.</p>
+      </div>
+      <figure>
+        <video src="raw-recorder/data/episode/episode_20261007T093802Z/front_preview.mp4" controls muted playsinline preload="metadata"></video>
+        <figcaption>One recorded demonstration, front camera (teleoperated).</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="grid">
+      <div class="card"><p class="step">1 · Show</p><h3>Quest teleoperation</h3><p>The operator drives the arm with Meta Quest controllers. A small web server on a laptop turns controller motion into robot commands at 125 Hz.</p></div>
+      <div class="card"><p class="step">2 · Record</p><h3>Raw recorder</h3><p>A ROS 2 stack on a Jetson records three cameras at 30 Hz, robot state at 50 Hz and the gripper at 20 Hz, then checks every episode for gaps.</p></div>
+      <div class="card"><p class="step">3 · Check</p><h3>Whole-episode rule</h3><p>Demos become a LeRobot dataset at 10 Hz. If any part of an episode is broken, the whole episode is dropped: no patching.</p></div>
+      <div class="card"><p class="step">4 · Study</p><h3>Training</h3><p>Pi0.5 (OpenPI) and SmolVLA (LeRobot) are fine-tuned on a lab GPU server. Each model sees the three images, the arm position and a text instruction.</p></div>
+      <div class="card"><p class="step">5 · Try</p><h3>Inference gateway</h3><p>The Jetson sends synced camera frames to the model, checks every answer against safety limits, moves the arm, and records the run for review.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The setup</h2>
+    <div class="grid">
+      <figure><img src="assets/view-front.jpg" alt="Front camera view of the table"><figcaption>Front camera (RealSense D435i)</figcaption></figure>
+      <figure><img src="assets/view-fronttop.jpg" alt="Top camera view of the table"><figcaption>Top camera (RealSense D435i)</figcaption></figure>
+      <figure><img src="assets/view-wrist.jpg" alt="Wrist camera view"><figcaption>Wrist camera, between the gripper fingers</figcaption></figure>
+    </div>
+    <div class="scroll" style="margin-top:18px">
+      <table>
+        <tr><th>Part</th><th>What we use</th></tr>
+        <tr><td>Robot</td><td>Universal Robots UR16e with a Robotiq gripper</td></tr>
+        <tr><td>Edge computer</td><td>NVIDIA Jetson: cameras, robot link, recorder and gateway</td></tr>
+        <tr><td>Training and model serving</td><td>Lab GPU server with 4&times; RTX A4000 (16 GB)</td></tr>
+        <tr><td>Teleoperation</td><td>Meta Quest controllers through a WebXR page</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Models and results so far</h2>
+    <div class="scroll">
+      <table>
+        <tr><th>Task</th><th>Model</th><th>Data</th><th>Result</th></tr>
+        <tr><td>Pick up a block</td><td>SmolVLA</td><td>153 demos</td><td>Reaches and grasps on many runs; no retry after a miss.</td></tr>
+        <tr><td>Pick up a block</td><td>Pi0.5</td><td>123 demos</td><td>About 8 of 9 grasps on the real robot once the top camera was back in place.</td></tr>
+        <tr><td>Pour and dock</td><td>Pi0.5</td><td>52 demos (about 1 hour)</td><td>Offline it predicts the demonstrator&rsquo;s moves 2.2&times; better than standing still, but on the robot it does not grasp yet. More demonstrations are being recorded.</td></tr>
+      </table>
+    </div>
+    <div class="two" style="margin-top:22px">
+      <div>
+        <h3>What we learned</h3>
+        <p class="muted">Camera placement matters: a slightly moved camera made a good model reach for the wrong side. With few demonstrations a model copies the nearest demo instead of finding the object, so coverage of positions matters more than training longer.</p>
+      </div>
+      <figure><img src="assets/pour-training-loss.png" alt="Training loss of the pour model compared with the pick-and-place model"><figcaption>Training loss of the pour model (80,000 steps).</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Try the dashboards</h2>
+    <p class="muted">Both links open frozen copies of the real dashboards with a few recorded examples. They are not connected to the robot: cameras show &ldquo;not connected&rdquo; and buttons do nothing.</p>
+    <div class="grid">
+      <div class="card"><h3>Raw recorder</h3><p>The recording dashboard: live checks, the episode library, validation, joint plots, three synced camera videos and a 3D replay of the arm.</p><a class="btn primary" href="raw-recorder/">Open</a></div>
+      <div class="card"><h3>Inference gateway</h3><p>The dashboard that runs a trained model on the robot, and its library of model runs with cameras, graphs and 3D replay on one timeline.</p><a class="btn primary" href="inference-gateway/">Open</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>VeggieBot by Kishan Chhari &middot; internship project &middot; <a href="https://github.com/Aeromaddy123/veggiebot">Documentation on GitHub</a></p>
+    <p>3D arm model: Universal Robots ROS 2 Description (BSD-3-Clause). 3D viewer: three.js (MIT). Models: OpenPI and LeRobot (Apache-2.0).</p>
+  </footer>
+</div>
+</body>
+</html>

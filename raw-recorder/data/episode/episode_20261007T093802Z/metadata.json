@@ -1,0 +1,8 @@
+{
+  "name": "Pour and dock (bowl fixed)",
+  "target_demos": 60,
+  "task": "pour the water into the bowl and put the bottle back",
+  "operator": "",
+  "object": "bottle and bowl",
+  "demo_name": "Demo 33"
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeggieBot Raw recorder (demo copy)</title>
+<style>
+  :root { --bg:#F8F4EC; --ink:#1B2127; --muted:#5B636B; --accent:#3B7A1E; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0F1216; --ink:#ECEFF1; --muted:#9AA3AB; --accent:#9BD35A; } }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--ink); font:16px/1.5 Verdana, sans-serif; }
+  main { max-width:520px; padding:24px 16px; text-align:center; }
+  h1 { font-size:22px; margin:0 0 8px; }
+  p { color:var(--muted); margin:6px 0; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>VeggieBot Raw recorder</h1>
+  <p id="msg">Opening the demo copy&hellip;</p>
+  <p><small>A frozen copy of the real dashboard with a few recorded demos. It is not connected to a robot, cameras or a model.</small></p>
+  <p><a href="../">Back to the project</a></p>
+</main>
+<script>
+  // The dashboard in app/ is an unchanged copy of the real one; sw.js answers its server requests from saved demo data.
+  const msg = document.getElementById("msg");
+  if (!("serviceWorker" in navigator)) {
+    msg.textContent = "This browser does not allow the demo helper (service workers). Try Chrome, Edge, Firefox or Safari outside private mode.";
+  } else {
+    navigator.serviceWorker.register("sw.js", { scope: "./" })
+      .then(() => navigator.serviceWorker.ready)
+      .then(() => { location.replace("app/"); })
+      .catch((error) => { msg.textContent = "Could not start the demo copy: " + error.message; });
+  }
+</script>
+</body>
+</html>

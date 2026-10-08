@@ -1,0 +1,72 @@
+{
+  "valid": true,
+  "episode_id": "episode_20261007T093802Z",
+  "checks": {
+    "front_camera_at_least_28_hz": true,
+    "wrist_camera_at_least_28_hz": true,
+    "fronttop_camera_at_least_28_hz": true,
+    "gripper_at_least_15_hz": true,
+    "episode_has_start_and_stop": true,
+    "rtde_at_least_45_hz": true,
+    "single_rtde_generation": true,
+    "rtde_max_gap_at_most_100_ms": true,
+    "wall_clock_monotonic": true,
+    "monotonic_clock_monotonic": true,
+    "robot_timestamp_monotonic": true
+  },
+  "camera": {
+    "duration_s": 76.494931549,
+    "topics": {
+      "/veggiebot/camera/wrist": {
+        "count": 2261,
+        "rate_hz": 29.55751386680674
+      },
+      "/veggiebot/camera/fronttop": {
+        "count": 2291,
+        "rate_hz": 29.949696713336685
+      },
+      "/veggiebot/camera/front": {
+        "count": 2294,
+        "rate_hz": 29.988914997989678
+      }
+    }
+  },
+  "auxiliary": {
+    "duration_s": 76.451857371,
+    "topics": {
+      "/veggiebot/episode": {
+        "count": 4,
+        "rate_hz": 0.05232050780125709
+      },
+      "/veggiebot/gripper/command": {
+        "count": 8076,
+        "rate_hz": 105.63510525073806
+      },
+      "/veggiebot/gripper": {
+        "count": 1530,
+        "rate_hz": 20.01259423398084
+      }
+    }
+  },
+  "rtde": {
+    "count": 9805,
+    "duration_s": 78.431749116,
+    "rate_hz": 125.00039984445525,
+    "connection_generations": [
+      3
+    ],
+    "max_gap_ms": 24.314837,
+    "gaps_over_100_ms": 0,
+    "wall_clock_monotonic": true,
+    "monotonic_clock_monotonic": true,
+    "robot_timestamp_monotonic": true,
+    "finite_joint_tcp": true
+  },
+  "canonical_v2": {
+    "present": false,
+    "valid": null,
+    "checks": {}
+  },
+  "success_training_eligible": false,
+  "auto_quarantined": false
+}
